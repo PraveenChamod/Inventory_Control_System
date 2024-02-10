@@ -1,4 +1,4 @@
-# Inventory_COntrol_System 
+# Inventory_Control_System 
 
 This inventory control system is a .NET Core application designed to help manage inventory for businesses of various sizes. It provides functionalities for adding, updating, and deleting products, managing stock levels, generating reports, and more.
 
