@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Data_Access_Layer.Entities
 {
     public class Store
     {
-        [Key]
-        public Guid? ID { get; } = Guid.NewGuid();
+        public Guid? Id { get; set; }
         public string? StoreName { get; set; }
         public string? Phone { get; set;}
         public string? Email { get; set; }
@@ -19,5 +13,7 @@ namespace Data_Access_Layer.Entities
         public string? State { get; set; }
         public string? PostalCode { get; set; }
         public string? Country { get; set; }
+        public ICollection<Employee>? Employees { get; set; }
+        public ICollection<Inventory>? Inventories { get; set; }
     }
 }

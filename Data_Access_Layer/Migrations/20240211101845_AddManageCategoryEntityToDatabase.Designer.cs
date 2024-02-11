@@ -3,6 +3,7 @@ using System;
 using Data_Access_Layer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data_Access_Layer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240211101845_AddManageCategoryEntityToDatabase")]
+    partial class AddManageCategoryEntityToDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +33,6 @@ namespace Data_Access_Layer.Migrations
 
                     b.Property<string>("CategoryName")
                         .HasColumnType("text");
-
-                    b.Property<int?>("CategoryStatus")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -168,36 +168,6 @@ namespace Data_Access_Layer.Migrations
                     b.ToTable("ManageProducts");
                 });
 
-            modelBuilder.Entity("Data_Access_Layer.Entities.ManageSupplier", b =>
-                {
-                    b.Property<Guid?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int?>("Description")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("EmployeeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("SupplierId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("SupplierId");
-
-                    b.ToTable("ManageSuppliers");
-                });
-
             modelBuilder.Entity("Data_Access_Layer.Entities.Product", b =>
                 {
                     b.Property<Guid?>("Id")
@@ -212,9 +182,6 @@ namespace Data_Access_Layer.Migrations
 
                     b.Property<string>("ProductName")
                         .HasColumnType("text");
-
-                    b.Property<int?>("ProductStatus")
-                        .HasColumnType("integer");
 
                     b.Property<Guid?>("SupplierId")
                         .HasColumnType("uuid");
@@ -381,9 +348,6 @@ namespace Data_Access_Layer.Migrations
                     b.Property<string>("SupplierName")
                         .HasColumnType("text");
 
-                    b.Property<int?>("SupplierStatus")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.ToTable("Suppliers");
@@ -451,21 +415,6 @@ namespace Data_Access_Layer.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Data_Access_Layer.Entities.ManageSupplier", b =>
-                {
-                    b.HasOne("Data_Access_Layer.Entities.Employee", "Employee")
-                        .WithMany("ManageSuppliers")
-                        .HasForeignKey("EmployeeId");
-
-                    b.HasOne("Data_Access_Layer.Entities.Supplier", "Supplier")
-                        .WithMany("ManageSuppliers")
-                        .HasForeignKey("SupplierId");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("Data_Access_Layer.Entities.Product", b =>
@@ -560,8 +509,6 @@ namespace Data_Access_Layer.Migrations
 
                     b.Navigation("ManageProducts");
 
-                    b.Navigation("ManageSuppliers");
-
                     b.Navigation("PurchaseOrders");
 
                     b.Navigation("SaleOrders");
@@ -597,8 +544,6 @@ namespace Data_Access_Layer.Migrations
 
             modelBuilder.Entity("Data_Access_Layer.Entities.Supplier", b =>
                 {
-                    b.Navigation("ManageSuppliers");
-
                     b.Navigation("Products");
 
                     b.Navigation("PurchaseOrders");

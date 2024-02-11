@@ -3,6 +3,7 @@ using System;
 using Data_Access_Layer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data_Access_Layer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240211104056_AddItemStatusEnum")]
+    partial class AddItemStatusEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,11 +34,11 @@ namespace Data_Access_Layer.Migrations
                     b.Property<string>("CategoryName")
                         .HasColumnType("text");
 
-                    b.Property<int?>("CategoryStatus")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<int?>("ItemStatus")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -207,14 +210,14 @@ namespace Data_Access_Layer.Migrations
                     b.Property<Guid?>("CategoryId")
                         .HasColumnType("uuid");
 
+                    b.Property<int?>("ItemStatus")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ProductDescription")
                         .HasColumnType("text");
 
                     b.Property<string>("ProductName")
                         .HasColumnType("text");
-
-                    b.Property<int?>("ProductStatus")
-                        .HasColumnType("integer");
 
                     b.Property<Guid?>("SupplierId")
                         .HasColumnType("uuid");
@@ -366,6 +369,9 @@ namespace Data_Access_Layer.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
+                    b.Property<int?>("ItemStatus")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Phone")
                         .HasColumnType("text");
 
@@ -380,9 +386,6 @@ namespace Data_Access_Layer.Migrations
 
                     b.Property<string>("SupplierName")
                         .HasColumnType("text");
-
-                    b.Property<int?>("SupplierStatus")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
