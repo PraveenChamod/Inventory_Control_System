@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Data_Access_Layer.DTOs.Category;
 using Data_Access_Layer.DTOs.Employee;
 using Data_Access_Layer.DTOs.Store;
 using Data_Access_Layer.DTOs.Supplier;
@@ -13,6 +14,9 @@ namespace Presentation_Layer
         {
             CreateMap<Store, GetStoreDto>();
             CreateMap<GetStoreDto, Store>();
+
+            CreateMap<Category, GetCategoryDto>();
+            CreateMap<GetCategoryDto, Category>();
 
             CreateMap<Employee, GetEmployeeDto>();
             CreateMap<GetEmployeeDto, Employee>();

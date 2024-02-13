@@ -1,9 +1,9 @@
 ﻿using Bussiness_Logic_Layer.Interfaces;
+using Data_Access_Layer.Auth;
 using Data_Access_Layer.DTOs.Common;
 using Data_Access_Layer.DTOs.Employee;
-using Data_Access_Layer.DTOs.Store;
 using Data_Access_Layer.DTOs.User;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -15,11 +15,14 @@ namespace Presentation_Layer.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUserService _userService;
-        public AccountController(IUserService userService)
+        private readonly IAuthService _authService;
+        public AccountController(IUserService userService, IAuthService authService)
         {
             _userService = userService;
+            _authService = authService;
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         [Route("Register")]
         [ProducesResponseType(typeof(GetUserDto), StatusCodes.Status200OK)]
@@ -35,6 +38,18 @@ namespace Presentation_Layer.Controllers
             {
                 return BadRequest(new CommonErrorDto { Message = ex.Message, Code = 400 });
             }
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Login")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(GetUserDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult> Login(LoginUserDto loginUserDto)
+        {
+            var validUser = await _authService.ValidateUser(loginUserDto);
+            if (!validUser) return Unauthorized();
+            return Ok(new { Token = await _authService.GenerateToken() });
         }
     }
 }

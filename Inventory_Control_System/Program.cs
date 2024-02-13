@@ -4,10 +4,12 @@ using Data_Access_Layer.Context;
 using Data_Access_Layer.Entities;
 using Data_Access_Layer.Interfaces;
 using Data_Access_Layer.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,12 +23,15 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.AddTransient<ISupplierRepository, SupplierRepository>();
 builder.Services.AddTransient<IStoreRepository, StoreRepository>();
 builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddScoped<IDbInitializerService, DbInitializerService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -41,6 +46,30 @@ builder.Services.AddApiVersioning(options =>
     options.ReportApiVersions = true;
 });
 
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateActor = true,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        RequireExpirationTime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
+        ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value))
+    };
+});
+
+builder.Services.AddCors(options => options.AddPolicy(
+    "Policy",
+    build => build.AllowAnyOrigin().AllowAnyHeader()
+    )); ;
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -51,6 +80,11 @@ using (var scope = app.Services.CreateScope())
 
     dbInitializerService.Seed().Wait();
 }
+
+app.UseCors("Policy");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
