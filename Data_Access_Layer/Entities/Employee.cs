@@ -20,6 +20,5 @@ namespace Data_Access_Layer.Entities
         public ICollection<ManageProduct>? ManageProducts { get; set; }
         public ICollection<ManageCategory>? ManageCategories { get; set; }
         public ICollection<ManageSupplier>? ManageSuppliers { get; set; }
-        public ICollection<User>? Users { get; set; }
     }
 }

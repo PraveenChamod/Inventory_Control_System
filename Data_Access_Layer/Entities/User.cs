@@ -16,7 +16,6 @@ namespace Data_Access_Layer.Entities
         public DateTime UpdatedDate { get; set; }
         public DateTime DeletedDate { get; set; }
         public UserStatus UserStatus { get; set; }
-        public Guid? EmployeeId { get; set; }
         public Employee? Employee { get; set; }
     }
 }

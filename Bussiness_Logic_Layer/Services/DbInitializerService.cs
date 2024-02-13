@@ -1,30 +1,29 @@
 ﻿using Bussiness_Logic_Layer.Interfaces;
 using Data_Access_Layer.Auth;
-using Data_Access_Layer.DTOs.Employee;
-using Data_Access_Layer.DTOs.Store;
+using Data_Access_Layer.Entities.Enums;
+using Data_Access_Layer.Entities;
 using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
-using System.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace Bussiness_Logic_Layer.Services
 {
     public class DbInitializerService : IDbInitializerService
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IEmployeeService _employeeService;
-        private readonly IStoreService _storeService;
+        private readonly UserManager<User> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public DbInitializerService(RoleManager<IdentityRole> roleManager, IStoreService storeService, IEmployeeService employeeService)
+        public DbInitializerService(RoleManager<IdentityRole> roleManager, IConfiguration configuration, UserManager<User> userManager)
         {
             _roleManager = roleManager;
-            _employeeService = employeeService;
-            _storeService = storeService;
+            _configuration = configuration;
+            _userManager = userManager;
         }
         public async Task Seed()
         {
+            await SeedAdminUser();
             await SeedUserRoles();
-            await SeedStores();
-            await SeedEmployees();
+            
         }
 
         private async Task SeedUserRoles()
@@ -40,68 +39,35 @@ namespace Bussiness_Logic_Layer.Services
             }
         }
 
-        private async Task SeedStores()
+        private async Task SeedAdminUser()
         {
-            var checkStores = _storeService.GetStoreList();
-            if(checkStores.Count == 0)
+            var userSettings = _configuration.GetSection("UserSetting");
+            var superPassword = userSettings["SuperPassword"];
+
+            if (!string.IsNullOrEmpty(superPassword))
             {
-                var storeData = new List<CreateStoreDto>();
-                using (StreamReader r = new(@"StoreData.json"))
-                {
-                    string json = r.ReadToEnd();
-                    storeData = JsonConvert.DeserializeObject<List<CreateStoreDto>>(json);
-                }
-                if (storeData != null)
-                {
-                    foreach (var store in storeData)
-                    {
-                        var add = new CreateStoreDto
-                        {
-                            Id = store.Id,
-                            StoreName = store.StoreName,
-                            Phone = store.Phone,
-                            Email = store.Email,
-                            Street = store.Street,
-                            City = store.City,
-                            State = store.State,
-                            PostalCode = store.PostalCode,
-                            Country = store.Country,
-                        };
-                         await _storeService.CreateStore(add);
-                    }
-                }
+                await CreateAndSeedUser("Admin", "admin.user@gmail.com", UserRoles.Admin.ToString(), superPassword);
             }
         }
 
-        private async Task SeedEmployees()
+        private async Task CreateAndSeedUser(string role, string email, string roleName, string password)
         {
-            var checkEmployees = _employeeService.GetEmployeeList();
-            if (checkEmployees.Count == 0)
+            User user = new()
             {
-                var employeeData = new List<CreateEmployeeDto>();
-                using (StreamReader r = new(@"EmployeeData.json"))
-                {
-                    string json = r.ReadToEnd();
-                    employeeData = JsonConvert.DeserializeObject<List<CreateEmployeeDto>>(json);
-                }
-                if (employeeData != null)
-                {
-                    foreach (var employee in employeeData)
-                    {
-                        var add = new CreateEmployeeDto
-                        {
-                            Id = employee.Id,
-                            Name = employee.Name,
-                            Designation = employee.Designation,
-                            NIC = employee.NIC,
-                            Phone = employee.Phone,
-                            Email = employee.Email,
-                            Password = employee.Password,
-                            StoreId = employee.StoreId,
-                        };
-                        await _employeeService.CreateEmployee(add);
-                    }
-                }
+                FirstName = role,
+                LastName = "User",
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                Email = email,
+                UserName = email,
+                UserStatus = UserStatus.Active
+            };
+
+            IdentityResult result = await _userManager.CreateAsync(user, password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, roleName);
             }
         }
     }

@@ -1,6 +1,5 @@
 ﻿using Data_Access_Layer.Context;
 using Data_Access_Layer.DTOs.Employee;
-using Data_Access_Layer.Entities;
 using Data_Access_Layer.Interfaces;
 
 namespace Data_Access_Layer.Repositories
@@ -37,24 +36,6 @@ namespace Data_Access_Layer.Repositories
                 .FirstOrDefault()?
                 .Id;
             return id;
-        }
-
-        public async Task<Employee> CreateEmployee(CreateEmployeeDto createEmployeeDto)
-        {
-            var newEmployee = new Employee
-            {
-                Id = createEmployeeDto.Id,
-                Name = createEmployeeDto.Name,
-                Designation = createEmployeeDto.Designation,
-                NIC = createEmployeeDto.NIC,
-                Phone = createEmployeeDto.Phone,
-                Email = createEmployeeDto.Email,
-                Password = createEmployeeDto.Password,
-                StoreId = createEmployeeDto.StoreId,
-            };
-            _dbContext.Employees.Add(newEmployee);
-            await _dbContext.SaveChangesAsync();
-            return newEmployee;
         }
     }
 }

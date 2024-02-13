@@ -7,6 +7,5 @@ namespace Data_Access_Layer.Interfaces
     {
         IEnumerable<GetEmployeeDto> GetAllEmployees();
         Guid? GetIdByEmployeeName(string name);
-        Task<Employee> CreateEmployee(CreateEmployeeDto createEmployee);
     }
 }

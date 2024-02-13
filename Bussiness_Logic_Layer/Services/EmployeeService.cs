@@ -21,20 +21,5 @@ namespace Bussiness_Logic_Layer.Services
             var employees = _employeeRepository.GetAllEmployees().Select(entity => _mapper.Map<GetEmployeeDto>(entity)).ToList();
             return employees;
         }
-
-        public async Task<GetEmployeeDto> CreateEmployee(CreateEmployeeDto createEmployeeDto)
-        {
-            var name = createEmployeeDto.Name;
-            var existingEmployee = _employeeRepository.GetAllEmployees().FirstOrDefault(store => store.Name == name);
-
-            if (existingEmployee != null)
-            {
-                throw new Exception("Employee with the same name already exists.");
-            }
-
-            var createdEmployee = await _employeeRepository.CreateEmployee(createEmployeeDto);
-
-            return _mapper.Map<GetEmployeeDto>(createdEmployee);
-        }
     }
 }

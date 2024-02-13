@@ -2,7 +2,6 @@
 using Data_Access_Layer.DTOs.Store;
 using Data_Access_Layer.Entities;
 using Data_Access_Layer.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Data_Access_Layer.Repositories
 {
@@ -36,7 +35,6 @@ namespace Data_Access_Layer.Repositories
         {
             var newStore = new Store
             {
-                Id = createStoreDto.Id,
                 StoreName = createStoreDto.StoreName,
                 Phone = createStoreDto.Phone,
                 Email = createStoreDto.Email,
