@@ -21,14 +21,14 @@ namespace Presentation_Layer.Controllers
         }
 
         [HttpPost]
-        [Route("Create")]
+        [Route("Create/{employeeId}")]
         [ProducesResponseType(typeof(GetCategoryDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(CommonErrorDto), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GetCategoryDto>> CreateCategory([FromBody] CreateCategoryDto createCategoryDto)
+        public async Task<ActionResult<GetCategoryDto>> CreateCategory(Guid? employeeId, [FromBody] CreateCategoryDto createCategoryDto)
         {
             try
             {
-                var result = await _categoryService.CreateCategory(createCategoryDto);
+                var result = await _categoryService.CreateCategory(createCategoryDto, (Guid)employeeId!);
                 return Ok(result);
             }
             catch (ValidationException ex)
@@ -36,5 +36,40 @@ namespace Presentation_Layer.Controllers
                 return BadRequest(new CommonErrorDto { Message = ex.Message, Code = 400 });
             }
         }
+
+        [HttpPut]
+        [Route("Update/{categoryId}/{employeeId}")]
+        [ProducesResponseType(typeof(GetCategoryDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonErrorDto), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetCategoryDto>> UpdateCategory(Guid? categoryId, Guid? employeeId, [FromBody] UpdateCategoryDto updateCategoryDto)
+        {
+            try
+            {
+                var result = await _categoryService.UpdateCategory((Guid)categoryId!, updateCategoryDto, (Guid)employeeId!);
+                return Ok(result);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new CommonErrorDto { Message = ex.Message, Code = 400 });
+            }
+        }
+
+        [HttpPost]
+        [Route("Remove/{categoryId}/{employeeId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonErrorDto), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> SoftDeleteCategory(Guid? categoryId, Guid? employeeId)
+        {
+            try
+            {
+                await _categoryService.SoftDeleteCategory((Guid)categoryId!, (Guid)employeeId!);
+                return Ok("Category removed");
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new CommonErrorDto { Message = ex.Message, Code = 400 });
+            }
+        }
+
     }
 }

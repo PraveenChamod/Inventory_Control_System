@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bussiness_Logic_Layer.Interfaces;
 using Data_Access_Layer.DTOs.Category;
+using Data_Access_Layer.Entities.Enums;
 using Data_Access_Layer.Interfaces;
 
 namespace Bussiness_Logic_Layer.Services
@@ -22,7 +23,7 @@ namespace Bussiness_Logic_Layer.Services
             return categories;
         }
 
-        public async Task<GetCategoryDto> CreateCategory(CreateCategoryDto createCategoryDto)
+        public async Task<GetCategoryDto> CreateCategory(CreateCategoryDto createCategoryDto, Guid employeeId)
         {
             var name = createCategoryDto.CategoryName;
             var existingCategory = _categoryRepository.GetAllCategories().FirstOrDefault(category => category.CategoryName == name);
@@ -32,9 +33,36 @@ namespace Bussiness_Logic_Layer.Services
                 throw new Exception("Category with the same name already exists.");
             }
 
-            var createdCategory = await _categoryRepository.CreateCategory(createCategoryDto);
+            var createdCategory = await _categoryRepository.CreateCategory(createCategoryDto, employeeId);
 
             return _mapper.Map<GetCategoryDto>(createdCategory);
         }
+
+        public async Task<GetCategoryDto> UpdateCategory(Guid categoryId, UpdateCategoryDto updateCategoryDto, Guid employeeId)
+        {
+            var Category = _categoryRepository.GetAllCategories().FirstOrDefault(category => category.Id == categoryId);
+
+            if (Category == null)
+            {
+                throw new Exception("Category does not exist.");
+            }
+
+            var updatedCategory = await _categoryRepository.UpdateCategory(categoryId, updateCategoryDto, employeeId);
+
+            return _mapper.Map<GetCategoryDto>(updatedCategory);
+        }
+
+        public async Task SoftDeleteCategory(Guid categoryId, Guid employeeId)
+        {
+            var Category = _categoryRepository.GetAllCategories().FirstOrDefault(category => category.Id == categoryId);
+
+            if (Category!.CategoryStatus == ItemStatus.Inactive)
+            {
+                throw new Exception("Category is already removed.");
+            }
+
+            await _categoryRepository.SoftDeleteCategory(categoryId, employeeId);
+        }
+
     }
 }
