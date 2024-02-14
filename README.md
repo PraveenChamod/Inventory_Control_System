@@ -17,9 +17,10 @@ This inventory control system is a .NET Core application designed to help manage
 
 - [.NET Core SDK](https://dotnet.microsoft.com/download) installed on your machine.
 - [Visual Studio](https://visualstudio.microsoft.com/downloads/) or any preferred text editor for development.
+- Target framework: .NET 8.0
 
-### Installation
+### Login Credentials
+- URL: api/v1.0/Account/Login
+- Admin Role - Email: admin.user@gmail.com | Password: Admin@123
 
-1. Clone this repository to your local machine.
-   ```bash
-   git clone https://github.com/PraveenChamod/Inventory_Control_System.git
+
