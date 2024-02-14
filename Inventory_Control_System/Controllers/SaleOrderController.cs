@@ -1,34 +1,35 @@
 ﻿using Bussiness_Logic_Layer.Interfaces;
 using Data_Access_Layer.Auth;
 using Data_Access_Layer.DTOs.Common;
-using Data_Access_Layer.DTOs.Store;
+using Data_Access_Layer.DTOs.SaleOrder;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace Presentation_Layer.Controllers
 {
-    [Authorize(Roles = Roles.Admin + "," + Roles.Operator)]
+    [Authorize(Roles = Roles.Manager + "," + Roles.Operator)]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class StoreController : Controller
+    public class SaleOrderController : Controller
     {
-        private readonly IStoreService _storeService;
-        public StoreController(IStoreService storeService)
+        private readonly ISaleOrderService _saleOrderService;
+
+        public SaleOrderController(ISaleOrderService saleOrderService)
         {
-            _storeService = storeService;
+            _saleOrderService = saleOrderService;
         }
 
         [HttpPost]
-        [Route("Create")]
-        [ProducesResponseType(typeof(GetStoreDto), StatusCodes.Status200OK)]
+        [Route("Create/{employeeId}")]
+        [ProducesResponseType(typeof(GetSaleOrderDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(CommonErrorDto), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GetStoreDto>> CreateStore([FromBody] CreateStoreDto createStoreDto)
+        public async Task<ActionResult<GetSaleOrderDto>> CreateSaleOrder(Guid? employeeId, [FromBody] List<CreateSaleOrderDto> saleOrderItems)
         {
             try
             {
-                var result = await _storeService.CreateStore(createStoreDto);
+                var result = await _saleOrderService.CreateSaleOrder((Guid)employeeId!, saleOrderItems);
                 return Ok(result);
             }
             catch (ValidationException ex)
@@ -36,5 +37,6 @@ namespace Presentation_Layer.Controllers
                 return BadRequest(new CommonErrorDto { Message = ex.Message, Code = 400 });
             }
         }
+
     }
 }

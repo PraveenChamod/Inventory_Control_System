@@ -26,6 +26,8 @@ builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IInventoryRepository, InventoryRepository>();
+builder.Services.AddTransient<ISaleOrderRepository, SaleOrderRepository>();
+builder.Services.AddTransient<IPurchaseOrderRepository, PurchaseOrderRepository>();
 
 builder.Services.AddScoped<IDbInitializerService, DbInitializerService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
@@ -36,6 +38,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<ISaleOrderService, SaleOrderService>();
+builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

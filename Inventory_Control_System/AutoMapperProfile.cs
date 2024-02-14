@@ -3,6 +3,8 @@ using Data_Access_Layer.DTOs.Category;
 using Data_Access_Layer.DTOs.Employee;
 using Data_Access_Layer.DTOs.Inventory;
 using Data_Access_Layer.DTOs.Product;
+using Data_Access_Layer.DTOs.PurchaseOrder;
+using Data_Access_Layer.DTOs.SaleOrder;
 using Data_Access_Layer.DTOs.Store;
 using Data_Access_Layer.DTOs.Supplier;
 using Data_Access_Layer.DTOs.User;
@@ -45,6 +47,12 @@ namespace Presentation_Layer
 
             CreateMap<Inventory, UpdateInventoryDto>();
             CreateMap<UpdateInventoryDto, Inventory>();
+
+            CreateMap<SaleOrder, GetSaleOrderDto>();
+            CreateMap<GetSaleOrderDto, SaleOrder>();
+
+            CreateMap<PurchaseOrder, GetPurchaseOrderDto>();
+            CreateMap<GetPurchaseOrderDto, PurchaseOrder>();
         }
     }
 }

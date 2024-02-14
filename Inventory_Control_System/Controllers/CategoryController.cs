@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Presentation_Layer.Controllers
 {
-    [Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin + "," + Roles.Manager)]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
