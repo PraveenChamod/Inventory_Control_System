@@ -21,9 +21,8 @@ namespace Bussiness_Logic_Layer.Services
         }
         public async Task Seed()
         {
-            await SeedAdminUser();
             await SeedUserRoles();
-            
+            await SeedAdminUser();
         }
 
         private async Task SeedUserRoles()
