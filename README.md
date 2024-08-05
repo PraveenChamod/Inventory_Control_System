@@ -11,6 +11,10 @@ This inventory control system is a .NET Core application designed to help manage
 - **User Authentication:** Secure user authentication and role-based access control.
 - **Integration:** Seamlessly integrate with other systems through APIs.
 
+## ERD
+
+![Untitled-1](https://github.com/PraveenChamod/Inventory_Control_System/blob/develop/ERD.png)
+
 ## Getting Started
 
 ### Prerequisites
