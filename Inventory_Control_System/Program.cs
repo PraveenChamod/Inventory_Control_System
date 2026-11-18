@@ -41,7 +41,7 @@ builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<ISaleOrderService, SaleOrderService>();
 builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddAutoMapper(_ => { }, typeof(Program).Assembly);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
